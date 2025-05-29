@@ -1,0 +1,78 @@
+/* VideoDetail.css */
+
+.video-detail-page {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  
+  .video-container {
+    padding-top: 150px;
+    flex: 1;
+    max-width: 1000px;
+    margin: auto;
+  }
+  
+  .video-player video {
+    width: 100%;
+    border-radius: 12px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+    max-height: 60vh;
+  }
+  
+  .video-info {
+    margin-top: 20px;
+  }
+  
+  .video-info h1 {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+  
+  .video-user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+    cursor: pointer;
+  }
+  
+  .video-user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  
+  .video-user-name {
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .video-stats {
+    font-size: 14px;
+    color: #888;
+    margin-bottom: 10px;
+  }
+  
+  .video-description {
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  
+
+  .edit-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #f5a623;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .edit-button:hover {
+    background-color: #d98c1c;
+  }

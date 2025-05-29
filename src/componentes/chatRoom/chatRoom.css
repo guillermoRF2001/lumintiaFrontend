@@ -1,0 +1,189 @@
+/* Estilos generales del contenedor de la app */
+.App {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 200px 20px 20px 20px;
+}
+
+/* Estilo para el encabezado de usuario */
+.App h3 {
+    font-size: 20px;
+    font-weight: bold;
+    color: #5B2333;
+    margin-bottom: 20px;
+}
+
+/* Estilos para el contenedor de mensajes */
+.mensajes-container {
+    height: 360px; /* Altura máxima */
+    width: 480px;
+    overflow-y: auto; /* Agrega scroll vertical cuando los mensajes exceden el límite */
+    padding: 10px;
+    border: 2px solid #5B2333;
+    border-radius: 25px;
+    margin-bottom: 20px;
+    max-width: 480px; /* Ancho máximo */
+}
+
+/* Estilos para la lista de mensajes */
+.ul-mensajes {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 0;
+    margin: 0;
+}
+
+/* Estilo para cada mensaje */
+.li-mensaje {
+    background-color: white;
+    border: 2px solid #5B2333;
+    padding: 12px 15px;
+    color: #5B2333;
+    border-radius: 10px;
+    max-width: 70%;
+    word-wrap: break-word;
+    align-self: flex-start;
+    font-size: 14px;
+}
+
+/* Estilo para los mensajes propios */
+.li-mensaje.own-message {
+    background-color: #5B2333;
+    color: white;
+    border: 2px solid white;
+    align-self: flex-end;
+}
+
+/* Estilos para el contenedor de input y el botón */
+.chat-input-container {
+    display: flex;
+    align-items: center;
+    background: white;
+    border-radius: 10px;
+    padding: 5px;
+    width: 480px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+    border: 2px solid #5B2333;
+}
+
+/* Estilo para el input */
+.chat-input {
+    flex-grow: 1;
+    border: none;
+    padding: 10px;
+    border-radius: 10px;
+    outline: none;
+    background: transparent;
+    font-size: 14px;
+}
+
+/* Estilo para el botón de enviar */
+.send-button {
+    background-color: #5B2333;
+    border: none;
+    height: 40px;
+    width: 40px;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-left: 10px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Hover para el botón de enviar */
+.send-button:hover {
+    background-color: #5c1529;
+}
+
+/* Estilo para el botón de emojis */
+.emoji-button {
+    background-color: transparent;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+/* Estilo para el botón de archivo */
+.file-button {
+    background-color: transparent;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    
+}
+
+/* Emoji Selector */
+.emoji-selector {
+    position: absolute;
+    bottom: 60px; /* Ajuste según sea necesario */
+    left: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    background-color: white;
+    border: 2px solid #73c6e2;
+    border-radius: 10px;
+    padding: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+    max-width: 300px; /* Limitar el ancho máximo */
+    max-height: 200px; /* Limitar la altura máxima */
+    overflow: auto; /* Mostrar barra de desplazamiento si el contenido excede el tamaño */
+}
+
+/* Emojis dentro del selector */
+.emoji-selector span {
+    font-size: 24px;
+    cursor: pointer;
+    padding: 5px;
+    transition: background-color 0.3s;
+}
+
+/* Efecto hover en los emojis */
+.emoji-selector span:hover {
+    background-color: #e1f7ff;
+}
+
+/* Estilo para los enlaces de archivos en mensajes propios */
+.own-message .archivo-enlace {
+    color: white;
+    text-decoration: none;
+    border: 1px solid white;
+    padding: 5px;
+    border-radius: 5px;
+    display: inline-block;
+    width: 100%;
+}
+
+.own-message .archivo-enlace:hover {
+    background-color: #f7f4f3;
+    color: #5B2333;
+}
+
+/* Estilo para los enlaces de archivos en mensajes de la otra persona */
+.other-message .archivo-enlace {
+    color: #5B2333;
+    text-decoration: none;
+    border: 1px solid #5B2333;
+    padding: 5px;
+    border-radius: 5px;
+    display: inline-block;
+    width: 100%;
+}
+
+.other-message .archivo-enlace:hover {
+    background-color: #5B2333;
+    color: white;
+}
+
+/* Estilo para las imágenes enviadas */
+.archivo-imagen {
+    max-width: 100%;
+    border-radius: 5px;
+    margin-top: 5px;
+}

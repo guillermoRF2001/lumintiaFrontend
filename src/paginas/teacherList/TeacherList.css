@@ -1,0 +1,101 @@
+.teacher-list-container {
+  padding-top: 100px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.teacher-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.teacher-card {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease-in-out;
+}
+
+.teacher-card:hover {
+  transform: scale(1.03);
+}
+
+.teacher-info {
+  flex: 1;
+}
+
+.teacher-info h3 {
+  margin: 0;
+}
+
+.teacher-info p {
+  margin: 5px 0;
+}
+
+.teacher-actions {
+  display: flex;
+  align-items: center;
+}
+
+.teacher-actions .crear-chat {
+  background-color: #72C19D;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.teacher-actions .crear-chat:hover {
+  background-color: #62a587;
+}
+
+.teacher-actions .details-teacher {
+  background-color: #007bff;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.teacher-actions .crear-chat:disabled {
+  background-color: #cccccc;
+  color: #666666;
+  cursor: not-allowed;
+  border: 1px solid #999;
+}
+
+.teacher-actions .details-teacher:hover {
+  background-color: #0056b3;
+}
+
+.teacher-image img,
+.teacher-image .avatar-placeholder {
+  height: 80px;
+  width: 80px;
+  border-radius: 50%;
+  margin-right: 30px;
+  object-fit: cover;
+}
+
+
+.search-bar-container {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.search-input {
+  padding: 8px 12px;
+  width: 250px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+}

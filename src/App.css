@@ -1,0 +1,29 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%; 
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 10px; /* Ancho de la barra de desplazamiento */
+  padding-top: 100px;
+  background-color: #72C19D;
+}
+
+/* Personalizar el "thumb" (parte móvil de la barra de desplazamiento) */
+::-webkit-scrollbar-thumb {
+  background-color: white; /* Color del thumb */
+  border-radius: 10px; /* Bordes redondeados */
+    padding-top: 100px;
+
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 10px; /* Bordes redondeados */
+  
+}

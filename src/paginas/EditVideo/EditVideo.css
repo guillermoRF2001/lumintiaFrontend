@@ -1,0 +1,74 @@
+.editvideo-father {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  
+  .editvideo-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+    padding-top: 100px;
+  }
+  
+  .editvideo-content {
+    display: flex;
+    width: 80%;
+    gap: 3rem;
+    max-width: 1200px;
+  }
+  
+  .editvideo-form-container {
+    background: #f9ae60;
+    padding: 2rem;
+    border-radius: 10px;
+    width: 100%;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    box-shadow: 12px 12px 6px -1px rgba(0, 0, 0, 0.41);
+  }
+  
+  .editvideo-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    color: white;
+  }
+  
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: black;
+  }
+  
+  .form-input {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1rem;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+  }
+  
+  .editvideo-button {
+    width: 100%;
+    padding: 0.8rem;
+    background-color: #ef8339;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 1.5rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .editvideo-button:hover {
+    background-color: #d7742b;
+  }
+  
