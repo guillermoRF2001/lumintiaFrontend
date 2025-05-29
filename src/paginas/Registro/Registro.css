@@ -125,12 +125,14 @@
   color: black;
 }
 
-.regist-link {
+.register-link {
   color: #5744ff;
   font-weight: 600;
   text-decoration: none;
   cursor: pointer;
 }   
+
+
 
 @media (max-width: 768px) {
   .register-content {

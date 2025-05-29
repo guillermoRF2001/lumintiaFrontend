@@ -94,7 +94,7 @@ const TeacherList = () => {
       <div className="teacher-list-container">
         <h2>Lista de Profesores</h2>
 
-        <div className="search-bar-container">
+        <div className="search-bar-container-teacher">
           <input
             type="text"
             placeholder="Buscar por nombre"

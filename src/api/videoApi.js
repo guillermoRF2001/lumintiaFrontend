@@ -1,13 +1,5 @@
 import axios from "axios";
 
-/**
- * Sube un video al servidor con barra de progreso.
- * Incluye automáticamente el ID del usuario desde localStorage.
- * 
- * @param {FormData} formData - Datos del video y demás campos.
- * @param {function} onUploadProgress - Callback para progreso (recibe porcentaje).
- * @returns {Promise<Object>} - Respuesta del servidor.
- */
 export const createVideo = async (formData, onUploadProgress) => {
   try {
     const user = JSON.parse(localStorage.getItem("user"));
@@ -22,7 +14,7 @@ export const createVideo = async (formData, onUploadProgress) => {
       throw new Error("El formulario debe contener un archivo de video con el campo 'video'");
     }
 
-    // Debug del contenido del FormData
+    
     for (let [key, value] of formData.entries()) {
       console.log(`${key}:`, value);
     }
@@ -46,9 +38,6 @@ export const createVideo = async (formData, onUploadProgress) => {
   }
 };
 
-/**
- * Obtiene todos los videos.
- */
 export const getVideos = async () => {
   try {
     const response = await fetch("http://localhost:4000/api/videos", {
@@ -66,9 +55,7 @@ export const getVideos = async () => {
   }
 };
 
-/**
- * Obtiene un video por ID.
- */
+
 export const getVideoById = async (id) => {
   try {
     const response = await fetch(`http://localhost:4000/api/videos/${id}`, {
@@ -86,9 +73,7 @@ export const getVideoById = async (id) => {
   }
 };
 
-/**
- * Actualiza un video existente.
- */
+
 export const updateVideo = async (id, formData, onUploadProgress) => {
   try {
     const response = await axios.put(`http://localhost:4000/api/videos/${id}`, formData, {
@@ -111,9 +96,7 @@ export const updateVideo = async (id, formData, onUploadProgress) => {
 };
 
 
-/**
- * Elimina un video por ID.
- */
+
 export const deleteVideo = async (videoId) => {
   try {
     const response = await fetch(`http://localhost:4000/api/videos/${videoId}`, {
@@ -128,6 +111,75 @@ export const deleteVideo = async (videoId) => {
     return await response.json();
   } catch (error) {
     console.error("Error en deleteVideo:", error.message);
+    throw error;
+  }
+};
+
+
+export const incrementVideoViews = async (id) => {
+  try {
+    const response = await fetch(`http://localhost:4000/api/videos/${id}/views`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error al incrementar visualizaciones: ${response.status}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error en incrementVideoViews:", error.message);
+    throw error;
+  }
+};
+
+export const getCommentsByVideoId = async (videoId) => {
+  try {
+    const response = await fetch(`http://localhost:4000/api/videos/${videoId}/comments`, {
+      headers: { "Content-Type": "application/json" },
+    });
+    const text = await response.text();
+    return JSON.parse(text); 
+  } catch (error) {
+    console.error("Error en getCommentsByVideoId:", error.message);
+    throw error;
+  }
+};
+
+export const addCommentToVideo = async (videoId, comment) => {
+  try {
+    const response = await fetch(`http://localhost:4000/api/videos/${videoId}/comments`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(comment),
+    });
+    const text = await response.text();
+    return JSON.parse(text);
+  } catch (error) {
+    console.error("Error en addCommentToVideo:", error.message);
+    throw error;
+  }
+};
+
+export const incrementVideoLikes = async (id) => {
+  try {
+    const response = await fetch(`http://localhost:4000/api/videos/${id}/likes`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error al incrementar likes: ${response.status}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error en incrementVideoLikes:", error.message);
     throw error;
   }
 };

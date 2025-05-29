@@ -20,7 +20,7 @@
 }
 
 .edituser-form-container {
-  background: #f9ae60;
+  background: #72C19D;
   padding: 2rem;
   border-radius: 10px;
   width: 100%;
@@ -58,7 +58,7 @@
 .edituser-button {
   width: 100%;
   padding: 0.8rem;
-  background-color: #ef8339;
+  background-color: #3f8666;
   color: white;
   border: none;
   border-radius: 6px;
@@ -70,7 +70,7 @@
 }
 
 .edituser-button:hover {
-  background-color: #d7742b;
+  background-color: #39c450;
 }
 
 .edituser-button.delete {

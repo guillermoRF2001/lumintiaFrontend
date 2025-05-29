@@ -3,36 +3,49 @@ import { useNavigate } from "react-router-dom";
 import Header from "../../componentes/Header/Header";
 import "./HomeVideo.css";
 import { getVideos } from "../../api/videoApi";
+import { getUsers } from "../../api/userApi";
+import AvatarPlaceholder from "../../componentes/AvatarPlaceholder/AvatarPlaceholder";
 
 function HomeVideo() {
   const [videos, setVideos] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-
   const [searchTerm, setSearchTerm] = useState("");
   const [searchField, setSearchField] = useState("title");
+
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchVideos = async () => {
+    const fetchVideosAndUsers = async () => {
       try {
-        const data = await getVideos();
-        setVideos(data);
+        const [videoData, userData] = await Promise.all([getVideos(), getUsers()]);
+
+        const userMap = {};
+        userData.forEach((user) => {
+          userMap[user.id] = user;
+        });
+
+        const videosWithUsers = videoData.map((video) => ({
+          ...video,
+          user: userMap[video.user_id],
+        }));
+
+        setVideos(videosWithUsers);
       } catch (error) {
-        console.error("Error fetching videos:", error);
+        console.error("Error fetching videos or users:", error);
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchVideos();
+    fetchVideosAndUsers();
   }, []);
 
   const filteredVideos = videos.filter((video) => {
     const search = searchTerm.toLowerCase();
     if (searchField === "title") {
-      return video.title.toLowerCase().includes(search);
+      return video.title?.toLowerCase().includes(search);
     } else if (searchField === "user") {
-      return video.user && video.user.name && video.user.name.toLowerCase().includes(search);
+      return video.user?.name?.toLowerCase().includes(search);
     }
     return true;
   });
@@ -48,22 +61,21 @@ function HomeVideo() {
 
   return (
     <div className="homeVideos-father">
-      <Header/>
+      <Header />
 
-      
       <div className="homeVideos-body">
-         <div className="search-bar-container">
-            <div className="search-bar">
-              <input
-                type="text"
-                className="search-input"
-                placeholder={`Buscar por título`}
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-            </div>
+        <div className="search-bar-container">
+          <div className="search-bar">
+            <input
+              type="text"
+              className="search-input"
+              placeholder="Buscar por título"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
           </div>
-        <div className="homeVideos-header"></div>
+        </div>
+
         {isLoading ? (
           <p>Cargando videos...</p>
         ) : (
@@ -79,20 +91,33 @@ function HomeVideo() {
                     <img
                       src={video.thumbnail_url || "/placeholder.jpg"}
                       alt={video.title || `Video ${index + 1}`}
+                      className="image-video-thumbnail"
                     />
                     <div className="video-info">
                       <p className="video-title">{video.title}</p>
+
                       {video.user && (
                         <div className="user-info">
-                          <img
-                            src={video.user.profile_picture || "/user-placeholder.jpg"}
-                            alt={video.user.name}
-                            className="user-image"
-                          />
+                          {video.user.profile_picture ? (
+                            <img
+                              src={video.user.profile_picture}
+                              alt={video.user.name}
+                              className="user-image-video"
+                            />
+                          ) : (
+                            <AvatarPlaceholder
+                              name={video.user.name}
+                              size={20}
+                            />
+                          )}
                           <span className="user-name">{video.user.name}</span>
                         </div>
                       )}
-                      <p className="video-views">Visualizaciones: {video.views}</p>
+
+                      <p className="video-views">
+                        Visualizaciones: {video.views}<br />
+                        likes: {video.likes || 0}
+                      </p>
                     </div>
                   </div>
                 ))}

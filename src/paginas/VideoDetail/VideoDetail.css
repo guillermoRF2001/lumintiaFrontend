@@ -14,7 +14,7 @@
   }
   
   .video-player video {
-    width: 100%;
+    width: 50vw;
     border-radius: 12px;
     box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
     max-height: 60vh;
@@ -76,3 +76,107 @@
   .edit-button:hover {
     background-color: #d98c1c;
   }
+
+  .comments-section {
+  width: 480px;
+  margin: 40px auto 80px;
+  display: flex;
+  flex-direction: column;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.comments-section h2 {
+  color: #5B2333;
+  font-weight: bold;
+  margin-bottom: 15px;
+  font-size: 20px;
+}
+
+.mensajes-container {
+  height: 360px;
+  overflow-y: auto;
+  border: 2px solid #5B2333;
+  border-radius: 25px;
+  padding: 10px;
+  background: #fff;
+  margin-bottom: 20px;
+}
+
+.ul-mensajes {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.li-mensaje {
+  background-color: white;
+  border: 2px solid #5B2333;
+  padding: 12px 15px;
+  color: #5B2333;
+  border-radius: 10px;
+  max-width: 70%;
+  word-wrap: break-word;
+  font-size: 14px;
+  align-self: flex-start;
+}
+
+.li-mensaje.own-message {
+  background-color: #5B2333;
+  color: white;
+  border: 2px solid white;
+  align-self: flex-end;
+}
+
+.chat-input-container {
+  display: flex;
+  align-items: center;
+  background: white;
+  border-radius: 10px;
+  padding: 5px;
+  border: 2px solid #5B2333;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.chat-input {
+  flex-grow: 1;
+  border: none;
+  padding: 10px;
+  border-radius: 10px;
+  outline: none;
+  background: transparent;
+  font-size: 14px;
+}
+
+.send-button {
+  background-color: #5B2333;
+  border: none;
+  height: 40px;
+  width: 40px;
+  color: white;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-left: 10px;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.send-button:hover {
+  background-color: #5c1529;
+}
+
+.like-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: #ff4757;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-weight: bold;
+  z-index: 10;
+}

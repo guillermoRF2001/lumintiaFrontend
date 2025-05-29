@@ -9,7 +9,9 @@ import imgCalendar from '../../assets/images/imgCalendar.png';
 import logout from '../../assets/images/logout.png';
 import cross from '../../assets/images/cross.png';
 
-function Header({ searchTerm, setSearchTerm, searchField }) {
+function Header() {
+
+  const user = JSON.parse(localStorage.getItem("user"));
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
@@ -72,6 +74,7 @@ function Header({ searchTerm, setSearchTerm, searchField }) {
           <div className='header-buttons-body'>
             <button className="header-button" onClick={() => navigate('/teachers')}>Profesores</button>
             <button className="header-button" onClick={() => navigate('/createVideo')}>upload</button>
+             <button className="header-button"  onClick={() => navigate(`/teacher/${user.id}`)}>Mi Cuenta</button>
             <button className="header-button" onClick={toggleSettings}>Ajustes</button>
           </div>
 

@@ -15,7 +15,7 @@ const TeacherDetail = () => {
   const [loading, setLoading] = useState(true);
 
   const [searchTerm, setSearchTerm] = useState("");
-  const [searchField, setSearchField] = useState("title");
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -32,9 +32,14 @@ const TeacherDetail = () => {
         setTeacher(selectedTeacher);
 
         const allVideos = await getVideos();
-        const teacherVideos = allVideos.filter(
-          (video) => video.user_id.toString() === id
-        );
+
+        // Enriquecemos videos con datos del usuario (el profesor)
+        const teacherVideos = allVideos
+          .filter((video) => video.user_id.toString() === id)
+          .map((video) => ({
+            ...video,
+            user: selectedTeacher,
+          }));
 
         setVideos(teacherVideos);
       } catch (error) {
@@ -47,8 +52,19 @@ const TeacherDetail = () => {
     fetchData();
   }, [id]);
 
-  const handlePayTeacher = () => {
-    navigate(`/payteacher/${id}`);
+  // Solo filtramos por título, ignoramos el usuario
+  const filteredVideos = videos.filter((video) =>
+    video.title?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  // Crear filas de 4 videos
+  const rows = [];
+  for (let i = 0; i < filteredVideos.length; i += 4) {
+    rows.push(filteredVideos.slice(i, i + 4));
+  }
+
+  const handleVideoClick = (videoId) => {
+    navigate(`/video/${videoId}`);
   };
 
   if (loading) return <div>Cargando detalles del profesor...</div>;
@@ -69,45 +85,63 @@ const TeacherDetail = () => {
           <div className="teacher-info">
             <h2>{teacher.name}</h2>
             <p>{teacher.email}</p>
-            <p>Disponible: {teacher.available ? "Sí" : "No"}</p>
           </div>
         </div>
 
         <div className="teacher-videos-list">
           <h3>Videos Subidos</h3>
-          {videos.length === 0 ? (
-            <p>Este profesor aún no ha subido videos.</p>
+
+          <div className="search-bar-container-details" style={{ marginBottom: "1rem" }}>
+            <div className="search-bar-details">
+              <input
+                type="text"
+                className="search-input"
+                placeholder="Buscar por título"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+          </div>
+
+          {filteredVideos.length === 0 ? (
+            <p>No se encontraron videos que coincidan con la búsqueda.</p>
           ) : (
             <div className="image-grid">
-              {videos.reduce((rows, video, index) => {
-                const rowIndex = Math.floor(index / 4);
-                if (!rows[rowIndex]) rows[rowIndex] = [];
-                rows[rowIndex].push(video);
-                return rows;
-              }, []).map((row, rowIndex) => (
+              {rows.map((row, rowIndex) => (
                 <div key={rowIndex} className="row">
                   {row.map((video) => (
                     <div
                       key={video.id}
                       className="image-item"
-                      onClick={() => navigate(`/video/${video.id}`)}
+                      onClick={() => handleVideoClick(video.id)}
                     >
                       <img
                         src={video.thumbnail_url || "/placeholder.jpg"}
-                        alt={video.title}
+                        alt={video.title || "Video"}
+                        className="image-video-thumbnail"
                       />
                       <div className="video-info">
                         <p className="video-title">{video.title}</p>
-                        <div className="user-info">
-                          <img
-                            src={teacher.profile_picture || "/user-placeholder.jpg"}
-                            alt={teacher.name}
-                            className="user-image"
-                          />
-                          <span className="user-name">{teacher.name}</span>
-                        </div>
+                        {video.user && (
+                          <div className="user-info">
+                            {video.user.profile_picture ? (
+                              <img
+                                src={video.user.profile_picture}
+                                alt={video.user.name}
+                                className="user-image-video"
+                              />
+                            ) : (
+                              <AvatarPlaceholder
+                                name={video.user.name}
+                                size={20}
+                              />
+                            )}
+                            <span className="user-name">{video.user.name}</span>
+                          </div>
+                        )}
                         <p className="video-views">
-                          Visualizaciones: {video.views || 0}
+                          Visualizaciones: {video.views || 0}<br />
+                          likes: {video.likes || 0}
                         </p>
                       </div>
                     </div>
