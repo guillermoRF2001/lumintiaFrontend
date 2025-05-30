@@ -46,7 +46,6 @@
     };
 
     const handleForgotPassword = () => {
-      // Lógica para recuperar contraseña
       navigate('/recuperar-contrasena');
     };
 

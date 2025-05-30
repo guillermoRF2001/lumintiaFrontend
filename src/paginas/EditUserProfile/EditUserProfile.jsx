@@ -3,7 +3,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import Header from '../../componentes/Header/Header';
 import Alert from '../../componentes/alert/alert';
-// IMPORTAR la función nueva para actualizar con imagen
 import { getUserById, updateUserWithImage, deleteUser } from '../../api/userApi';
 import './EditUserProfile.css';
 
@@ -38,7 +37,7 @@ function EditUserProfile() {
           confirmPassword: '',
           profilePicture: null,
         });
-        if (user.profile_image_url) { // Ajusta el campo según lo que devuelva el backend
+        if (user.profile_image_url) { 
           setPreviewImage(user.profile_image_url);
         }
       } catch (error) {
@@ -81,7 +80,6 @@ function EditUserProfile() {
         },
       });
 
-      // Construimos objeto con datos a enviar (sin imagen)
       const userData = {
         id,
         name: form.name,
@@ -92,7 +90,6 @@ function EditUserProfile() {
         userData.password = form.password;
       }
 
-      // Usamos la función con imagen para enviar FormData
       const updatedUser = await updateUserWithImage(userData, form.profilePicture);
 
       Swal.fire({

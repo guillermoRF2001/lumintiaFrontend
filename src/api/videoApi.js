@@ -14,11 +14,6 @@ export const createVideo = async (formData, onUploadProgress) => {
       throw new Error("El formulario debe contener un archivo de video con el campo 'video'");
     }
 
-    
-    for (let [key, value] of formData.entries()) {
-      console.log(`${key}:`, value);
-    }
-
     const response = await axios.post("http://localhost:4000/api/videos", formData, {
       headers: {
         "Content-Type": "multipart/form-data",

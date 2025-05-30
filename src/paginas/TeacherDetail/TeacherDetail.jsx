@@ -33,7 +33,6 @@ const TeacherDetail = () => {
 
         const allVideos = await getVideos();
 
-        // Enriquecemos videos con datos del usuario (el profesor)
         const teacherVideos = allVideos
           .filter((video) => video.user_id.toString() === id)
           .map((video) => ({
@@ -52,12 +51,10 @@ const TeacherDetail = () => {
     fetchData();
   }, [id]);
 
-  // Solo filtramos por título, ignoramos el usuario
   const filteredVideos = videos.filter((video) =>
     video.title?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Crear filas de 4 videos
   const rows = [];
   for (let i = 0; i < filteredVideos.length; i += 4) {
     rows.push(filteredVideos.slice(i, i + 4));

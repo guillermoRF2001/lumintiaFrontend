@@ -7,7 +7,7 @@ import {
   incrementVideoViews,
   getCommentsByVideoId,
   addCommentToVideo,
-  incrementVideoLikes, // <-- importar aquí
+  incrementVideoLikes,
 } from "../../api/videoApi";
 import "./VideoDetail.css";
 
@@ -20,7 +20,7 @@ function VideoDetail() {
   const [comments, setComments] = useState([]);
   const [newCommentText, setNewCommentText] = useState("");
   const [isLoading, setIsLoading] = useState(true);
-  const [likes, setLikes] = useState(0); // <-- estado likes
+  const [likes, setLikes] = useState(0); 
 
   const mensajesContainerRef = useRef(null);
 
@@ -36,7 +36,7 @@ function VideoDetail() {
 
         const videoData = await getVideoById(id);
         setVideo(videoData);
-        setLikes(videoData.likes || 0); // <-- inicializar likes
+        setLikes(videoData.likes || 0); 
 
         await incrementVideoViews(videoData.id);
 
@@ -85,7 +85,6 @@ function VideoDetail() {
     }
   };
 
-  // Nueva función para like
   const handleLikeClick = async () => {
     try {
       const data = await incrementVideoLikes(video.id);

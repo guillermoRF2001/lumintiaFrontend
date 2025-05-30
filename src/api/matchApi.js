@@ -1,14 +1,9 @@
-// src/api/matchApi.js
-
-// Obtener el ID del usuario autenticado desde localStorage
 const storedUser = JSON.parse(localStorage.getItem("user"));
 const userId = storedUser?.id;
 
-const baseURL = 'http://localhost:4000/api/matches'; // URL de las rutas en matchRouter.js
+const baseURL = 'http://localhost:4000/api/matches'; 
 
-/**
- * Obtener los matches completos del usuario logueado
- */
+
 export const getCompleteMatches = async () => {
   try {
     const storedUser = JSON.parse(localStorage.getItem("user"));
@@ -18,17 +13,14 @@ export const getCompleteMatches = async () => {
     if (!response.ok) {
       throw new Error(`Error: ${response.status} ${response.statusText}`);
     }
-    const result = await response.json(); // Respuesta completa
-    return result.data; // Devuelve solo el array de matches
+    const result = await response.json(); 
+    return result.data; 
   } catch (error) {
     console.error("Error obteniendo matches completos:", error);
     throw error;
   }
 };
 
-/**
- * Actualizar el estado de un match
- */
 export const updateMatchState = async (matchId, matchState) => {
   try {
     const response = await fetch(`${baseURL}/${matchId}/state`, {
@@ -49,9 +41,7 @@ export const updateMatchState = async (matchId, matchState) => {
   }
 };
 
-/**
- * Eliminar un match
- */
+
 export const deleteMatch = async (matchId) => {
   try {
     const response = await fetch(`${baseURL}/${matchId}`, {

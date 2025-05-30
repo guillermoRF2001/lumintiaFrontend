@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import Alert from '../../componentes/alert/alert.jsx';
 import Header from '../../componentes/Header/Header.jsx';
-import { getVideoById, updateVideo, deleteVideo } from '../../api/videoApi'; // <-- asegúrate de importar deleteVideo
+import { getVideoById, updateVideo, deleteVideo } from '../../api/videoApi'; 
 import './EditVideo.css';
 
 function EditVideo() {

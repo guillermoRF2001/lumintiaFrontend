@@ -5,15 +5,15 @@ const Alert = ({ type, message, show }) => {
   useEffect(() => {
     if (show) {
       Swal.fire({
-        icon: type, // Usamos el tipo directamente como icono
-        title: type === 'success' ? 'Éxito' : 'Error', // Personalizamos el título
+        icon: type, 
+        title: type === 'success' ? 'Éxito' : 'Error',
         text: message,
         confirmButtonText: 'Aceptar',
       });
     }
-  }, [show, type, message]); // Se ejecuta cuando cambia `show`, `type` o `message`
+  }, [show, type, message]); 
 
-  return null; // Este componente no renderiza nada en el DOM
+  return null; 
 };
 
 export default Alert;

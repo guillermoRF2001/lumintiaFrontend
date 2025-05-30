@@ -15,10 +15,8 @@ function ChatList() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Estado para abrir chat con un usuario específico
   const abrirChatCon = location.state?.abrirChatCon;
 
-  // Obtener usuario actual desde localStorage
   useEffect(() => {
     const usuarioLS = localStorage.getItem("user");
     if (usuarioLS) {
@@ -27,7 +25,6 @@ function ChatList() {
     }
   }, []);
 
-  // Conexión a socket y solicitud de chats
   useEffect(() => {
     if (!usuario) return;
 
@@ -41,7 +38,6 @@ function ChatList() {
     socketInstance.on("user_chats", (data) => {
       setChats(data);
 
-      // Si se pidió abrir chat con un usuario específico, seleccionarlo
       if (abrirChatCon) {
         const chatParaAbrir = data.find(
           (chat) =>
@@ -62,13 +58,11 @@ function ChatList() {
     };
   }, [usuario, abrirChatCon]);
 
-  // Función para obtener el ID del otro usuario en un chat
   const obtenerOtroUsuarioId = (chat) => {
     if (!usuario) return null;
     return chat.user1_id === usuario.id ? chat.user2_id : chat.user1_id;
   };
 
-  // Cuando los chats cambian, obtenemos los nombres de los otros usuarios (si no se han cargado)
   useEffect(() => {
     if (chats.length === 0) return;
     chats.forEach((chat) => {

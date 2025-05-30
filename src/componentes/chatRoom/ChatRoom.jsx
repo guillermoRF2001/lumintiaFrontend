@@ -40,7 +40,6 @@ function ChatRoom({ numRoom: numRoomProp, otroUsuario }) {
         const otroUsuarioId = ids.find((id) => id !== user.id);
         if (otroUsuarioId) {
           if (usuarios[otroUsuarioId]) {
-            // No need to fetch if already cached
           } else {
             try {
               const res = await fetch(`http://localhost:4000/api/users/${otroUsuarioId}`);
@@ -59,11 +58,10 @@ function ChatRoom({ numRoom: numRoomProp, otroUsuario }) {
     newSocket.on("chat_message", (data) => {
   setMensajes((prev) => [...prev, data]);
 
-  // Notificar si el mensaje NO lo envió el usuario actual
   if (data.usuario !== user.name && Notification.permission === "granted") {
     new Notification("Nuevo mensaje", {
       body: `${data.usuario}: ${data.texto}`,
-      icon: "/icono-chat.png", // (opcional) tu icono personalizado
+      icon: "/icono-chat.png", 
     });
   }
 });
@@ -89,9 +87,6 @@ function ChatRoom({ numRoom: numRoomProp, otroUsuario }) {
       alert(error);
     });
 
-    newSocket.on("disconnect", () => {
-      console.log("🔴 Un usuario se ha desconectado");
-    });
 
     return () => {
       newSocket.disconnect();

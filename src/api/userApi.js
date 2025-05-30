@@ -10,7 +10,6 @@ export const createUser = async (userData) => {
     });
 
     const text = await response.text(); 
-    console.log('Respuesta del servidor:', text); 
 
     if (!response.ok) {
         throw new Error(text || 'Error al crear el usuario');
@@ -31,17 +30,15 @@ export const loginUser = async (credentials) => {
         body: JSON.stringify(credentials),
     });
 
-    const text = await response.text(); // Recibe la respuesta como texto
-    console.log('Respuesta del servidor:', text); // Muestra el contenido de la respuesta
+    const text = await response.text(); 
 
     if (!response.ok) {
         throw new Error(text || 'Error al iniciar sesión');
     }
 
     try {
-        const { token, user } = JSON.parse(text); // Intenta parsear el texto como JSON
+        const { token, user } = JSON.parse(text); 
 
-        // Guardamos el token y el usuario en localStorage
         localStorage.setItem('authToken', token);;
         localStorage.setItem('user', JSON.stringify(user));
 
@@ -52,7 +49,6 @@ export const loginUser = async (credentials) => {
 };
 
 
-// Function to fetch all users
 export const getUsers = async () => {
     const response = await fetch(API_URL);
     if (!response.ok) {
@@ -61,7 +57,6 @@ export const getUsers = async () => {
     return await response.json();
 };
 
-// Function to fetch a user by ID
 export const getUserById = async (id) => {
     const response = await fetch(`${API_URL}/${id}`);
     if (!response.ok) {
@@ -71,7 +66,6 @@ export const getUserById = async (id) => {
 };
 
 
-// Función para actualizar usuario sin imagen (solo JSON)
 export const updateUser = async (user) => {
     const response = await fetch(`${API_URL}/${user.id}`, {
         method: 'PUT',
@@ -88,7 +82,6 @@ export const updateUser = async (user) => {
     return await response.json();
 };
 
-// Nueva función para actualizar usuario con imagen usando FormData
 export const updateUserWithImage = async (userData, imageFile) => {
     const formData = new FormData();
 
@@ -115,7 +108,6 @@ export const updateUserWithImage = async (userData, imageFile) => {
     return await response.json();
 };
 
-// Function to delete a user
 export const deleteUser = async (id) => {
     const response = await fetch(`${API_URL}/${id}`, {
         method: 'DELETE',
@@ -126,7 +118,6 @@ export const deleteUser = async (id) => {
 };
 
 
-// Función para actualizar el rol de un usuario
 export const updateUserRole = async (userId, newRole) => {
     const response = await fetch(`${API_URL}/${userId}`, {
       method: 'PUT',

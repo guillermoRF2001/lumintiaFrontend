@@ -30,7 +30,6 @@ function Calendario() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Carga usuario de localStorage
   useEffect(() => {
     const usuarioLS = localStorage.getItem("user");
     if (usuarioLS) {
@@ -38,7 +37,6 @@ function Calendario() {
     }
   }, []);
 
-  // Conexión socket y carga chats
   useEffect(() => {
     if (!usuario) return;
 
@@ -172,7 +170,6 @@ function Calendario() {
   };
 
   const iniciarLlamada = (event) => {
-    console.log(event);
   const popupWidth = 1200;
   const popupHeight = 800;
   const left = window.screenX + (window.innerWidth - popupWidth) / 2;
@@ -310,7 +307,6 @@ function Calendario() {
     }
   };
 
-  // Manejador para eliminar evento
   const handleDeleteEvent = async (eventId) => {
     const result = await Swal.fire({
       title: '¿Eliminar evento?',
@@ -424,10 +420,6 @@ function Calendario() {
         } catch (e) {
           console.error("Error al parsear JSON:", e);
         }
-
-        console.log("Response status:", response.status);
-        console.log("Response OK:", response.ok);
-        console.log("Datos recibidos:", data);
 
         if (!response.ok) {
           return Swal.fire("Error", data.error || "Error al crear el evento", "error");
