@@ -99,7 +99,8 @@
   background: #e2e2e2;
 }
 
-.video-dropzone.dragging {
+.video-dropzone.dragging,
+.thumbnail-dropzone.dragging {
   background-color: #d0f0e0;
   border-color: #4caf50;
   color: #2e7d32;

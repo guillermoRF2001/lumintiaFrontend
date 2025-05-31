@@ -176,7 +176,7 @@ function Calendario() {
   const top = window.screenY + (window.innerHeight - popupHeight) / 2;
 
   window.open(
-    `http://localhost:4000/call/${event}`, 
+    `http://localhost:3000/call/${event}`, 
     'popup_llamada',
     `width=${popupWidth},height=${popupHeight},left=${left},top=${top},resizable=yes,scrollbars=yes`
   );

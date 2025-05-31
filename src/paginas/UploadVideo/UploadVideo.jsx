@@ -11,6 +11,7 @@ import './UploadVideo.css';
 function UploadVideo() {
   const navigate = useNavigate();
   const [isDragging, setIsDragging] = useState(false);
+  const [isImageDragging, setIsImageDragging] = useState(false);
   const [previewImage, setPreviewImage] = useState(null);
 
   const [form, setForm] = useState({
@@ -83,6 +84,31 @@ function UploadVideo() {
 
   const handleDragLeave = () => {
     setIsDragging(false);
+  };
+
+  const handleImageDrop = (e) => {
+    e.preventDefault();
+    setIsImageDragging(false);
+
+    const droppedFile = e.dataTransfer.files[0];
+    if (droppedFile && droppedFile.type.startsWith('image/')) {
+      setForm((prevForm) => ({ ...prevForm, thumbnail: droppedFile }));
+    } else {
+      setAlertConfig({
+        show: true,
+        type: 'error',
+        message: 'Por favor, suelta una imagen válida.',
+      });
+    }
+  };
+
+  const handleImageDragOver = (e) => {
+    e.preventDefault();
+    setIsImageDragging(true);
+  };
+
+  const handleImageDragLeave = () => {
+    setIsImageDragging(false);
   };
 
   const handleSubmit = async (e) => {
@@ -204,8 +230,11 @@ function UploadVideo() {
 
             <div className="thumbnail-upload-section">
               <div
-                className="thumbnail-dropzone"
+                className={`thumbnail-dropzone ${isImageDragging ? 'dragging' : ''}`}
                 onClick={() => document.getElementById('thumbnailInput').click()}
+                onDrop={handleImageDrop}
+                onDragOver={handleImageDragOver}
+                onDragLeave={handleImageDragLeave}
               >
                 {form.thumbnail ? (
                   <img
@@ -214,7 +243,7 @@ function UploadVideo() {
                     className="custom-thumbnail"
                   />
                 ) : (
-                  <p>Haz clic para seleccionar una miniatura</p>
+                  <p>Haz clic o arrastra una imagen aquí</p>
                 )}
                 <input
                   type="file"
