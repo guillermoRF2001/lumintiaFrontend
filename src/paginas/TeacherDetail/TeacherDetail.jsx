@@ -21,7 +21,7 @@ const TeacherDetail = () => {
       try {
         const users = await getUsers();
         const selectedTeacher = users.find(
-          (user) => user.id.toString() === id && user.role === "teacher"
+          (user) => user.id.toString() === id 
         );
 
         if (!selectedTeacher) {
