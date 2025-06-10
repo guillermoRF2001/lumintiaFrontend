@@ -124,7 +124,6 @@ function Calendario() {
       .finally(() => setLoading(false));
   }, [usuario]);
 
-  // Manejador para mostrar detalles del evento
   const handleEventClick = (event) => {
     Swal.fire({
       title: event.title,
@@ -143,8 +142,7 @@ function Calendario() {
           </div>
         </div>
       `,
-
-            didOpen: () => {
+      didOpen: () => {
         const callButton = Swal.getPopup().querySelector("#call-button");
         if (callButton) {
           callButton.addEventListener("click", () => {
@@ -170,56 +168,56 @@ function Calendario() {
   };
 
   const iniciarLlamada = (event) => {
-  const popupWidth = 1200;
-  const popupHeight = 800;
-  const left = window.screenX + (window.innerWidth - popupWidth) / 2;
-  const top = window.screenY + (window.innerHeight - popupHeight) / 2;
+    const popupWidth = 1200;
+    const popupHeight = 800;
+    const left = window.screenX + (window.innerWidth - popupWidth) / 2;
+    const top = window.screenY + (window.innerHeight - popupHeight) / 2;
 
-  window.open(
-    `http://localhost:3000/call/${event}`, 
-    'popup_llamada',
-    `width=${popupWidth},height=${popupHeight},left=${left},top=${top},resizable=yes,scrollbars=yes`
-  );
-};
+    window.open(
+      `http://localhost:3000/call/${event}`, 
+      'popup_llamada',
+      `width=${popupWidth},height=${popupHeight},left=${left},top=${top},resizable=yes,scrollbars=yes`
+    );
+  };
+
   const cargarEventos = () => {
-  if (!usuario) return;
+    if (!usuario) return;
 
-  setLoading(true);
-  fetch("http://localhost:4000/api/calendar", {
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    },
-  })
-    .then((res) => {
-      if (!res.ok) throw new Error('Error al cargar eventos');
-      return res.json();
+    setLoading(true);
+    fetch("http://localhost:4000/api/calendar", {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
     })
-    .then((data) => {
-      const userId = usuario.id;
-      const eventosFormateados = data
-        .filter(evento => evento.participants.some(p => p.id === userId))
-        .map((e) => ({
-          id: e.id,
-          start: new Date(e.start_time),
-          end: new Date(e.end_time),
-          title: e.title,
-          desc: e.comment,
-          status: e.status,
-          participants: e.participants,
-          calendarTitle: `${e.title} (${e.participants.filter(p => p.id !== userId).map(p => p.name).join(', ')})`
-        }));
-      setEvents(eventosFormateados);
-      setError(null);
-    })
-    .catch((err) => {
-      console.error("Error:", err);
-      setError("No se pudieron cargar los eventos");
-      Swal.fire("Error", "No se pudieron cargar los eventos", "error");
-    })
-    .finally(() => setLoading(false));
-};
+      .then((res) => {
+        if (!res.ok) throw new Error('Error al cargar eventos');
+        return res.json();
+      })
+      .then((data) => {
+        const userId = usuario.id;
+        const eventosFormateados = data
+          .filter(evento => evento.participants.some(p => p.id === userId))
+          .map((e) => ({
+            id: e.id,
+            start: new Date(e.start_time),
+            end: new Date(e.end_time),
+            title: e.title,
+            desc: e.comment,
+            status: e.status,
+            participants: e.participants,
+            calendarTitle: `${e.title} (${e.participants.filter(p => p.id !== userId).map(p => p.name).join(', ')})`
+          }));
+        setEvents(eventosFormateados);
+        setError(null);
+      })
+      .catch((err) => {
+        console.error("Error:", err);
+        setError("No se pudieron cargar los eventos");
+        Swal.fire("Error", "No se pudieron cargar los eventos", "error");
+      })
+      .finally(() => setLoading(false));
+  };
 
-  // Manejador para editar evento
   const handleEditEvent = async (event) => {
     const { value: formValues } = await Swal.fire({
       title: `Editar Evento`,
@@ -290,7 +288,6 @@ function Calendario() {
         Swal.fire('¡Actualizado!', 'El evento ha sido modificado', 'success');
         cargarEventos();
 
-        
         setEvents(prev => prev.map(ev => 
           ev.id === event.id ? { 
             ...ev, 
@@ -335,17 +332,14 @@ function Calendario() {
         Swal.fire('¡Eliminado!', 'El evento ha sido eliminado', 'success');
         cargarEventos();
 
-        
         setEvents(prev => prev.filter(ev => ev.id !== eventId));
       } catch (error) {
         console.error('Error:', error);
         Swal.fire('Error', 'No se pudo eliminar el evento', 'error');
-
       }
     }
   };
 
-  // Crear evento al seleccionar rango en el calendario
   const handleSelectSlot = async (slotInfo) => {
     const fecha = slotInfo.start;
 
@@ -363,20 +357,46 @@ function Calendario() {
         `<label>Hora inicio:</label><br/>` +
         `<input type="time" id="horaInicio" class="swal2-input" value="09:00"><br/>` +
         `<label>Hora fin:</label><br/>` +
-        `<input type="time" id="horaFin" class="swal2-input" value="10:00">`,
+        `<input type="time" id="horaFin" class="swal2-input" value="10:00"><br/>` +
+        `<label style="margin-top: 10px;">Repetir semanalmente:</label><br/>` +
+        `<input type="checkbox" id="repetir" class="swal2-checkbox"><br/>` +
+        `<div id="opciones-repeticion" style="display: none; margin-top: 10px;">` +
+        `<label>Número de repeticiones:</label><br/>` +
+        `<input type="number" id="repeticiones" class="swal2-input" min="1" value="4" placeholder="Número de semanas"><br/>` +
+        `</div>`,
       focusConfirm: false,
       showCancelButton: true,
+      didOpen: () => {
+        const repetirCheckbox = document.getElementById('repetir');
+        const opcionesRepeticion = document.getElementById('opciones-repeticion');
+        
+        repetirCheckbox.addEventListener('change', (e) => {
+          opcionesRepeticion.style.display = e.target.checked ? 'block' : 'none';
+        });
+      },
       preConfirm: () => ({
         estudianteId: document.getElementById("estudiante").value,
         titulo: document.getElementById("titulo").value.trim(),
         comentario: document.getElementById("comentario").value.trim(),
         horaInicio: document.getElementById("horaInicio").value,
         horaFin: document.getElementById("horaFin").value,
+        repetir: document.getElementById("repetir").checked,
+        repeticiones: document.getElementById("repeticiones")?.value,
+        fechaFin: document.getElementById("fecha-fin")?.value
       }),
     });
 
     if (formValues) {
-      const { estudianteId, titulo, comentario, horaInicio, horaFin } = formValues;
+      const { 
+        estudianteId, 
+        titulo, 
+        comentario, 
+        horaInicio, 
+        horaFin,
+        repetir,
+        repeticiones,
+        fechaFin
+      } = formValues;
 
       if (!estudianteId || !titulo || !horaInicio || !horaFin) {
         return Swal.fire("Error", "Completa todos los campos obligatorios", "error");
@@ -386,32 +406,46 @@ function Calendario() {
         return Swal.fire("Error", "La hora de inicio debe ser antes que la hora de fin", "error");
       }
 
+      if (repetir && !repeticiones && !fechaFin) {
+        return Swal.fire("Error", "Debes especificar el número de repeticiones o la fecha final", "error");
+      }
+
       const fechaInicio = new Date(fecha);
       const [hInicio, mInicio] = horaInicio.split(":");
       fechaInicio.setHours(parseInt(hInicio), parseInt(mInicio), 0, 0);
 
-      const fechaFin = new Date(fecha);
+      const fechaFinEvento = new Date(fecha);
       const [hFin, mFin] = horaFin.split(":");
-      fechaFin.setHours(parseInt(hFin), parseInt(mFin), 0, 0);
+      fechaFinEvento.setHours(parseInt(hFin), parseInt(mFin), 0, 0);
 
       try {
+        const body = {
+          title: titulo,
+          comment: comentario,
+          start_time: fechaInicio.toISOString(),
+          end_time: fechaFinEvento.toISOString(),
+          participants: [
+            { user_id: usuario.id, role: "teacher" },
+            { user_id: parseInt(estudianteId), role: "student" },
+          ],
+          repeatWeekly: repetir,
+        };
+
+        if (repetir) {
+          if (repeticiones) {
+            body.repeatCount = parseInt(repeticiones);
+          } else if (fechaFin) {
+            body.repeatUntil = new Date(fechaFin).toISOString();
+          }
+        }
+
         const response = await fetch("http://localhost:4000/api/calendar", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
-          body: JSON.stringify({
-            title: titulo,
-            comment: comentario,
-            start_time: fechaInicio.toISOString(),
-            end_time: fechaFin.toISOString(),
-            participants: [
-              { user_id: usuario.id, role: "teacher" },
-              { user_id: parseInt(estudianteId), role: "student" },
-            ],
-            repeatWeekly: false,
-          }),
+          body: JSON.stringify(body),
         });
 
         let data;
@@ -428,24 +462,21 @@ function Calendario() {
         Swal.fire("¡Creado!", "El evento ha sido creado con éxito", "success");
         cargarEventos();
 
-
-        const evento = data.events[0];
-
-        const otrosParticipantes = evento.participants
-          .filter(p => p.id !== usuario.id)
-          .map(p => p.name)
-          .join(', ');
-
-        setEvents((prev) => [...prev, {
-          id: evento.id,
-          start: new Date(evento.start_time),
-          end: new Date(evento.end_time),
-          title: evento.title,
-          desc: evento.comment,
-          status: evento.status,
-          participants: evento.participants,
-          calendarTitle: `${evento.title} (${otrosParticipantes})`
-        }]);
+        if (data.events && data.events.length > 0) {
+          const userId = usuario.id;
+          const nuevosEventos = data.events.map(evento => ({
+            id: evento.id,
+            start: new Date(evento.start_time),
+            end: new Date(evento.end_time),
+            title: evento.title,
+            desc: evento.comment,
+            status: evento.status,
+            participants: evento.participants,
+            calendarTitle: `${evento.title} (${evento.participants.filter(p => p.id !== userId).map(p => p.name).join(', ')})`
+          }));
+          
+          setEvents(prev => [...prev, ...nuevosEventos]);
+        }
       } catch (error) {
         console.error("Error:", error);
       }
