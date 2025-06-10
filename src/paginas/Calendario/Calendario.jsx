@@ -10,6 +10,7 @@ import Swal from "sweetalert2";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "./Calendario.css";
 import Header from "../../componentes/Header/Header";
+import * as calendarApi from "../../api/calendarAPI";
 
 const locales = { es };
 
@@ -60,7 +61,6 @@ function Calendario() {
     };
   }, [usuario]);
 
-  // Obtener nombres de usuarios relacionados a los chats
   useEffect(() => {
     if (chats.length === 0) return;
 
@@ -84,20 +84,14 @@ function Calendario() {
     return { id, name: usuarios[id] || "Cargando..." };
   });
 
-  // Cargar eventos desde backend al iniciar o cambiar usuario
   useEffect(() => {
     if (!usuario) return;
+    cargarEventos();
+  }, [usuario]);
 
+  const cargarEventos = () => {
     setLoading(true);
-    fetch("http://localhost:4000/api/calendar", {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    })
-      .then((res) => {
-        if (!res.ok) throw new Error('Error al cargar eventos');
-        return res.json();
-      })
+    calendarApi.getEvents(localStorage.getItem("token"))
       .then((data) => {
         const userId = usuario.id;
         const eventosFormateados = data
@@ -122,7 +116,7 @@ function Calendario() {
         Swal.fire("Error", "No se pudieron cargar los eventos", "error");
       })
       .finally(() => setLoading(false));
-  }, [usuario]);
+  };
 
   const handleEventClick = (event) => {
     Swal.fire({
@@ -180,44 +174,6 @@ function Calendario() {
     );
   };
 
-  const cargarEventos = () => {
-    if (!usuario) return;
-
-    setLoading(true);
-    fetch("http://localhost:4000/api/calendar", {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    })
-      .then((res) => {
-        if (!res.ok) throw new Error('Error al cargar eventos');
-        return res.json();
-      })
-      .then((data) => {
-        const userId = usuario.id;
-        const eventosFormateados = data
-          .filter(evento => evento.participants.some(p => p.id === userId))
-          .map((e) => ({
-            id: e.id,
-            start: new Date(e.start_time),
-            end: new Date(e.end_time),
-            title: e.title,
-            desc: e.comment,
-            status: e.status,
-            participants: e.participants,
-            calendarTitle: `${e.title} (${e.participants.filter(p => p.id !== userId).map(p => p.name).join(', ')})`
-          }));
-        setEvents(eventosFormateados);
-        setError(null);
-      })
-      .catch((err) => {
-        console.error("Error:", err);
-        setError("No se pudieron cargar los eventos");
-        Swal.fire("Error", "No se pudieron cargar los eventos", "error");
-      })
-      .finally(() => setLoading(false));
-  };
-
   const handleEditEvent = async (event) => {
     const { value: formValues } = await Swal.fire({
       title: `Editar Evento`,
@@ -260,46 +216,22 @@ function Calendario() {
       const fechaFin = new Date(`${fecha}T${horaFin}`);
 
       try {
-        const response = await fetch(`http://localhost:4000/api/calendar/${event.id}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-          },
-          body: JSON.stringify({
+        await calendarApi.updateEvent(
+          event.id,
+          {
             title: titulo,
             comment: comentario,
             start_time: fechaInicio.toISOString(),
             end_time: fechaFin.toISOString(),
-          }),
-        });
-
-        let data;
-        try {
-          data = await response.json();
-        } catch (e) {
-          console.error("Error al parsear JSON:", e);
-        }
-
-        if (!response.ok) {
-          return Swal.fire('Error', data.error || 'Error al actualizar el evento', 'error');
-        }
+          },
+          localStorage.getItem("token")
+        );
 
         Swal.fire('¡Actualizado!', 'El evento ha sido modificado', 'success');
         cargarEventos();
-
-        setEvents(prev => prev.map(ev => 
-          ev.id === event.id ? { 
-            ...ev, 
-            title: titulo,
-            desc: comentario,
-            start: fechaInicio,
-            end: fechaFin,
-            calendarTitle: `${titulo} (${event.participants.filter(p => p.id !== usuario.id).map(p => p.name).join(', ')})`
-          } : ev
-        ));
       } catch (error) {
         console.error('Error:', error);
+        Swal.fire('Error', error.message || 'Error al actualizar el evento', 'error');
       }
     }
   };
@@ -318,24 +250,12 @@ function Calendario() {
 
     if (result.isConfirmed) {
       try {
-        const response = await fetch(`http://localhost:4000/api/calendar/${eventId}`, {
-          method: 'DELETE',
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error('Error al eliminar el evento');
-        }
-
+        await calendarApi.deleteEvent(eventId, localStorage.getItem("token"));
         Swal.fire('¡Eliminado!', 'El evento ha sido eliminado', 'success');
-        cargarEventos();
-
         setEvents(prev => prev.filter(ev => ev.id !== eventId));
       } catch (error) {
         console.error('Error:', error);
-        Swal.fire('Error', 'No se pudo eliminar el evento', 'error');
+        Swal.fire('Error', error.message || 'No se pudo eliminar el evento', 'error');
       }
     }
   };
@@ -382,7 +302,6 @@ function Calendario() {
         horaFin: document.getElementById("horaFin").value,
         repetir: document.getElementById("repetir").checked,
         repeticiones: document.getElementById("repeticiones")?.value,
-        fechaFin: document.getElementById("fecha-fin")?.value
       }),
     });
 
@@ -395,7 +314,6 @@ function Calendario() {
         horaFin,
         repetir,
         repeticiones,
-        fechaFin
       } = formValues;
 
       if (!estudianteId || !titulo || !horaInicio || !horaFin) {
@@ -406,8 +324,8 @@ function Calendario() {
         return Swal.fire("Error", "La hora de inicio debe ser antes que la hora de fin", "error");
       }
 
-      if (repetir && !repeticiones && !fechaFin) {
-        return Swal.fire("Error", "Debes especificar el número de repeticiones o la fecha final", "error");
+      if (repetir && !repeticiones) {
+        return Swal.fire("Error", "Debes especificar el número de repeticiones", "error");
       }
 
       const fechaInicio = new Date(fecha);
@@ -432,53 +350,16 @@ function Calendario() {
         };
 
         if (repetir) {
-          if (repeticiones) {
-            body.repeatCount = parseInt(repeticiones);
-          } else if (fechaFin) {
-            body.repeatUntil = new Date(fechaFin).toISOString();
-          }
+          body.repeatCount = parseInt(repeticiones);
         }
 
-        const response = await fetch("http://localhost:4000/api/calendar", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-          body: JSON.stringify(body),
-        });
-
-        let data;
-        try {
-          data = await response.json();
-        } catch (e) {
-          console.error("Error al parsear JSON:", e);
-        }
-
-        if (!response.ok) {
-          return Swal.fire("Error", data.error || "Error al crear el evento", "error");
-        }
+        const data = await calendarApi.createEvent(body, localStorage.getItem("token"));
 
         Swal.fire("¡Creado!", "El evento ha sido creado con éxito", "success");
         cargarEventos();
-
-        if (data.events && data.events.length > 0) {
-          const userId = usuario.id;
-          const nuevosEventos = data.events.map(evento => ({
-            id: evento.id,
-            start: new Date(evento.start_time),
-            end: new Date(evento.end_time),
-            title: evento.title,
-            desc: evento.comment,
-            status: evento.status,
-            participants: evento.participants,
-            calendarTitle: `${evento.title} (${evento.participants.filter(p => p.id !== userId).map(p => p.name).join(', ')})`
-          }));
-          
-          setEvents(prev => [...prev, ...nuevosEventos]);
-        }
       } catch (error) {
         console.error("Error:", error);
+        Swal.fire("Error", error.message || "Error al crear el evento", "error");
       }
     }
   };

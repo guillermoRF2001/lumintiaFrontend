@@ -1,4 +1,4 @@
-// paymentApi.js
+
 export const realizarPago = async (paymentData) => {
     const response = await fetch("http://localhost:4000/api/payment", {
       method: "POST",
@@ -7,7 +7,7 @@ export const realizarPago = async (paymentData) => {
     });
     return response.json();
 };
-// paymentApi.js
+
 export const verDatos = async (paymentData) => {
     const response = await fetch("http://localhost:4000/api/payments", {
       method: "POST",

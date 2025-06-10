@@ -46,7 +46,7 @@ function ChatRoom({ numRoom: numRoomProp, otroUsuario }) {
               if (!res.ok) throw new Error("Error al obtener el usuario");
               const data = await res.json();
               const nombre = data.name || "Desconocido";
-              setUsuarios((prev) => ({ ...prev, [otroUsuarioId]: nombre })); // Cache the user
+              setUsuarios((prev) => ({ ...prev, [otroUsuarioId]: nombre }));
             } catch (error) {
               console.error("Error fetching user:", error);
             }
